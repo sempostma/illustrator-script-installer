@@ -3,5 +3,15 @@
     "illustratorDirectoryNotFound": "Illustrator directory not found.",
     "searchIllustratorPath": "Search for Illustrator installation directory.",
     "cannotFindIllustratorInstallationPleaseSpecifyManually": "Cannot find illustrator installation please specify manually.",
-    "foundIllustratorDirectory": "Found illustrator directory."
+    "foundIllustratorDirectory": "Found illustrator directory.",
+    "selectIllustratorLoaction": "Select illustrator loaction",
+    "illustratorLocation": "Illustrator location",
+    "noAdobeIllustratorFolder": "No adobe illustrator folder",
+    "removeDirectory": "Remove directory",
+    "areYouSure": "Are you sure?",
+    "notFound": "Not found",
+    "refresh": "Refresh",
+    "addScript": "Add script",
+    "selectFile": "Select file",
+    "insertText": "Insert text"
 }

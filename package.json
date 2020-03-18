@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "electron-store": "^5.1.1",
+    "jquery": "^3.4.1",
     "semantic-ui-css": "^2.4.1"
   }
 }

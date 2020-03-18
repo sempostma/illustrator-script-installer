@@ -3,17 +3,42 @@
 
 <head>
   <meta charset="UTF-8">
-  <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-  <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' data:; script-src 'self'">
+  <meta http-equiv="X-Content-Security-Policy" content="default-src 'self' 'unsafe-inline' data:; script-src 'self'">
 
   <link rel="stylesheet" href="./node_modules/semantic-ui-css/semantic.css">
-  <link rel="stylesheet" href="./node_modules/semantic-ui-css/semantic.js">
+  <link rel="stylesheet" href="style.css">
 
   <title>Hello World!</title>
 </head>
 
 <body>
+
+  <div class="ui equal width aligned padded grid">
+    <div class="row">
+      <div class="purple column">
+        <span data-i18="illustratorLocation"></span> <i id="illustrator-location"></i>
+
+        <button id="refresh-illustrator-scripts" class="ui inverted button">
+          <span data-i18="refresh">Refresh</span>
+        </button>
+      </div>
+      <div class="pink column">
+        <button id="search-illustrator-dir" class="ui inverted button">
+          <span data-i18="searchIllustratorPath">Search Illustrator directory:</span>
+        </button>
+
+        <button id="select-illustrator-dir" class="ui purple button">
+          <span data-i18="selectIllustratorLoaction"></span>
+        </button>
+
+        <button id="remove-illustrator-dir" class="ui red button">
+          <span data-i18="removeDirectory"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <div id="illustrator-dir-not-found-message" class="ui negative message">
     <i id="illustrator-dir-not-found-close" class="close icon"></i>
     <div class="header">
@@ -25,16 +50,113 @@
     </p>
   </div>
 
-  <button id="search-illustrator-dir" class="ui primary button">
-    <span data-i18="searchIllustratorPath">Search Illustrator directory</span>
-  </button>
+  <table class="ui selectable structured definition table">
+    <thead class="full-width">
+      <tr>
+        <th></th>
+        <th>Name</th>
+        <th>Registration Date</th>
+        <th>E-mail address</th>
+        <th>Premium Plan</th>
+      </tr>
+    </thead>
+    <tbody id="scripts-rows-tbody">
+      <tr>
+        <td class="collapsing">
+          <div class="ui checkbox">
+            <input type="checkbox" name="example">
+            <label></label>
+          </div>
+        </td>
+        <td>John Lilki</td>
+        <td>September 14, 2013</td>
+        <td>jhlilk22@yahoo.com</td>
+        <td>No</td>
+      </tr>
+      <tr>
+        <td class="collapsing">
+          <div class="ui checkbox">
+            <input type="checkbox" name="example">
+            <label></label>
+          </div>
+        </td>
+        <td>Jamie Harington</td>
+        <td>January 11, 2014</td>
+        <td>jamieharingonton@yahoo.com</td>
+        <td>Yes</td>
+      </tr>
+      <tr>
+        <td class="collapsing">
+          <div class="ui checkbox">
+            <input type="checkbox" name="example">
+            <label></label>
+          </div>
+        </td>
+        <td>Jill Lewis</td>
+        <td>May 11, 2014</td>
+        <td>jilsewris22@yahoo.com</td>
+        <td>Yes</td>
+      </tr>
+    </tbody>
+    <tfoot class="full-width">
+      <tr>
+        <th></th>
+        <th colspan="4">
+          <div id="add-script" class="ui right floated small primary labeled icon button">
+            <i class="user icon"></i> <span data-i18="addScript"></span>
+          </div>
+          <div class="ui small  button">
+            Approve
+          </div>
+          <div class="ui small  disabled button">
+            Approve All
+          </div>
+        </th>
+      </tr>
+    </tfoot>
+  </table>
 
   <h1>Hello World!</h1>
   We are using Node.js <span id="node-version"></span>,
   Chromium <span id="chrome-version"></span>,
   and Electron <span id="electron-version"></span>.
 
+  <div class="ui modal" id="add-script-modal">
+    <i class="close icon"></i>
+    <div class="header">
+      <span data-i18="addScript"></span>
+    </div>
+    <div class="content">
+      <div class="description">
+        <div class="ui header">We've auto-chosen a profile image for you.</div>
+        <div class="ui top attached tabular menu">
+          <a data-tab-controls="select-file-tab" href="#" class="selectable active item"><span data-i18="selectFile"></span></a>
+          <a data-tab-controls="select-text-tab" href="#" class="selectable item"><span data-i18="insertText"></span></a>
+        </div>
+        <div id="select-file-tab" class="ui bottom attached active tab segment">
+          <p>tab1</p>
+          <p></p>
+        </div>
+        <div id="select-text-tab" class="ui bottom attached tab segment">
+          <p>tab2</p>
+          <p></p>
+        </div>
+      </div>
+    </div>
+    <div class="actions">
+      <div class="ui black deny button">
+        Nope
+      </div>
+      <div class="ui positive right labeled icon button">
+        Yep, that's me
+        <i class="checkmark icon"></i>
+      </div>
+    </div>
+  </div>
+
   <!-- You can also require other files to run in this process -->
+  <script src="./jquery.js"></script>
+  <script src="./node_modules/semantic-ui-css/semantic.js"></script>
   <script src="./renderer.js"></script>
 </body>
 
