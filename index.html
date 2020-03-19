@@ -18,6 +18,11 @@
     <div class="row">
       <div class="purple column">
         <span data-i18="illustratorLocation"></span> <i id="illustrator-location"></i>
+        <br>
+        We are using Node.js <span id="node-version"></span>,
+        Chromium <span id="chrome-version"></span>,
+        and Electron <span id="electron-version"></span>.
+        <br>
 
         <button id="refresh-illustrator-scripts" class="ui inverted button">
           <span data-i18="refresh">Refresh</span>
@@ -50,76 +55,32 @@
     </p>
   </div>
 
-  <table class="ui selectable structured definition table">
-    <thead class="full-width">
-      <tr>
-        <th></th>
-        <th>Name</th>
-        <th>Registration Date</th>
-        <th>E-mail address</th>
-        <th>Premium Plan</th>
-      </tr>
-    </thead>
-    <tbody id="scripts-rows-tbody">
-      <tr>
-        <td class="collapsing">
-          <div class="ui checkbox">
-            <input type="checkbox" name="example">
-            <label></label>
-          </div>
-        </td>
-        <td>John Lilki</td>
-        <td>September 14, 2013</td>
-        <td>jhlilk22@yahoo.com</td>
-        <td>No</td>
-      </tr>
-      <tr>
-        <td class="collapsing">
-          <div class="ui checkbox">
-            <input type="checkbox" name="example">
-            <label></label>
-          </div>
-        </td>
-        <td>Jamie Harington</td>
-        <td>January 11, 2014</td>
-        <td>jamieharingonton@yahoo.com</td>
-        <td>Yes</td>
-      </tr>
-      <tr>
-        <td class="collapsing">
-          <div class="ui checkbox">
-            <input type="checkbox" name="example">
-            <label></label>
-          </div>
-        </td>
-        <td>Jill Lewis</td>
-        <td>May 11, 2014</td>
-        <td>jilsewris22@yahoo.com</td>
-        <td>Yes</td>
-      </tr>
-    </tbody>
-    <tfoot class="full-width">
-      <tr>
-        <th></th>
-        <th colspan="4">
-          <div id="add-script" class="ui right floated small primary labeled icon button">
-            <i class="user icon"></i> <span data-i18="addScript"></span>
-          </div>
-          <div class="ui small  button">
-            Approve
-          </div>
-          <div class="ui small  disabled button">
-            Approve All
-          </div>
-        </th>
-      </tr>
-    </tfoot>
-  </table>
+  <div class="five column ui grid">
+    <div class="column grey"></div>
+    <div class="column grey"><b data-i18="name"></b></div>
+    <div class="column grey"><b data-i18="fileSize"></b></div>
+    <div class="column grey"><b data-i18="lastModified"></b></div>
+    <div class="column grey"><b data-i18="createdAt"></b></div>
+  </div>
+  <div class="row one column" style="padding: 0; flex-grow: 1; overflow-y: auto;">
+    <div class="column ui grid" id="scripts-rows-tbody">
+    </div>
+  </div>
+  <div class="five column ui grid">
+    <div class="grey sixteen wide column">
+      <div id="add-script" class="ui right floated small pink labeled icon button">
+        <i class="file alternate outline icon"></i> <span data-i18="addScript"></span>
+      </div>
+      <div class="ui small  button">
+        Approve
+      </div>
+      <div class="ui small  disabled button">
+        Approve All
+      </div>
+    </div>
+  </div>
 
-  <h1>Hello World!</h1>
-  We are using Node.js <span id="node-version"></span>,
-  Chromium <span id="chrome-version"></span>,
-  and Electron <span id="electron-version"></span>.
+
 
   <div class="ui modal" id="add-script-modal">
     <i class="close icon"></i>
@@ -128,22 +89,44 @@
     </div>
     <div class="content">
       <div class="description">
-        <div class="ui header">We've auto-chosen a profile image for you.</div>
+        <div class="ui header"><span data-i18="chooseMethod"></span></div>
         <div class="ui top attached tabular menu">
-          <a data-tab-controls="select-file-tab" href="#" class="selectable active item"><span data-i18="selectFile"></span></a>
-          <a data-tab-controls="select-text-tab" href="#" class="selectable item"><span data-i18="insertText"></span></a>
+          <a data-tab-controls="select-file-tab" href="#" class="selectable active item"><span
+              data-i18="selectFile"></span></a>
+          <a data-tab-controls="select-text-tab" href="#" class="selectable item"><span
+              data-i18="insertText"></span></a>
         </div>
         <div id="select-file-tab" class="ui bottom attached active tab segment">
-          <p>tab1</p>
-          <p></p>
+          <div class="ui left action input">
+            <button id="add-script-file-button" class="ui purple labeled icon button">
+              <i class="file alternate outline icon"></i>
+              <span data-i18="addScript"></span>
+            </button>
+            <input id="add-script-file-input" type="file" required>
+          </div>
         </div>
         <div id="select-text-tab" class="ui bottom attached tab segment">
-          <p>tab2</p>
-          <p></p>
+          <div class="ui form">
+            <div class="field">
+              <label data-i18="name"></label>
+              <small>Must end with .jsx</small>
+              <div class="ui input focus">
+                <input id="add-script-plain-text-filename" type="text">
+              </div>
+            </div>
+            <div class="field">
+              <label data-i18="insertText"></label>
+              <textarea id="add-script-plain-text-textarea" rows="10"></textarea>
+            </div>
+            <button id="add-script-plain-text-button" class="ui labeled purple icon button">
+              <i class="file alternate outline icon"></i>
+              <span data-i18="addScript"></span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
-    <div class="actions">
+    <!-- <div class="actions">
       <div class="ui black deny button">
         Nope
       </div>
@@ -151,7 +134,7 @@
         Yep, that's me
         <i class="checkmark icon"></i>
       </div>
-    </div>
+    </div> -->
   </div>
 
   <!-- You can also require other files to run in this process -->

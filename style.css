@@ -1,0 +1,29 @@
+.ui.table {
+    margin: 0
+}
+
+#scripts-rows-tbody {
+    padding: 0;
+}
+
+.ui.grid {
+    margin: 0;
+}
+
+#scripts-rows-tbody .row {
+    padding: 0;
+}
+
+#scripts-rows-tbody .row .column {
+    border-left: 1px solid #ccc;
+    padding: 10px;
+}
+
+#scripts-rows-tbody .row {
+    border-top: 1px solid #ccc;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}

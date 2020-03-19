@@ -13,5 +13,20 @@
     "refresh": "Refresh",
     "addScript": "Add script",
     "selectFile": "Select file",
-    "insertText": "Insert text"
+    "insertText": "Insert text",
+    "noFileSelected": "No file selected",
+    "scriptAlreadyExists": "Script already exists",
+    "restartWithAdminPrivileges": "Restart with admin privileges",
+    "fileNameMustEndWithDotJsx": "File name must end with .jsx",
+    "successfullyAddedScriptToIllustrator": "Successfully added script to illustrator",
+    "restartIllustratorToUseTheScript": "Restart illustrator to use the script",
+    "cannotFindFile": "cannotFindFile {{file}}",
+    "fileAlreadyExists": "File already exists {{file}}",
+    "successfullyDeactivatedScript": "Successfully deactivated script",
+    "fileSize": "File size",
+    "lastModified": "Last modified",
+    "createdAt": "Created at",
+    "name": "Name",
+    "chooseMethod": "Choose method",
+    "filenameShouldEndWithDotJsx": "Filename should end with .jsx"
 }

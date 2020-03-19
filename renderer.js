@@ -11,7 +11,10 @@ const { app, dialog, getCurrentWindow } = require('electron').remote
 const mainWindow = getCurrentWindow()
 const fs = require('fs')
 const path = require('path')
-
+var sudo = require('sudo-prompt');
+var options = {
+    name: 'Electron',
+};
 
 const store = new Store();
 
@@ -28,8 +31,15 @@ const qa = document.querySelectorAll.bind(document)
 
 const messages = require(`./_locales/${locale}.json`)
 
-function __(id) {
-    return messages[id]
+function __(id, args) {
+    let msg = messages[id]
+    for (const key in args) {
+        if (args.hasOwnProperty(key)) {
+            const element = args[key];
+            msg = msg.replace('{{' + key + '}}', element)
+        }
+    }
+    return msg
 }
 
 Array.from(qa('[data-i18]')).forEach(item => {
@@ -107,7 +117,7 @@ qs('#search-illustrator-dir').addEventListener('click', async e => {
     qs('#illustrator-dir-not-found-message').style.display = 'none'
     qs('#search-illustrator-dir').style.display = 'none'
     qs('#illustrator-location').innerText = store.get('illustrator-presets-dir', __('notFound'))
-
+    renderScriptRows()
 })
 
 qs('#select-illustrator-dir').addEventListener('click', async e => {
@@ -121,7 +131,7 @@ qs('#select-illustrator-dir').addEventListener('click', async e => {
     qs('#illustrator-dir-not-found-message').style.display = 'none'
     qs('#search-illustrator-dir').style.display = 'none'
     qs('#illustrator-location').innerText = store.get('illustrator-presets-dir', __('notFound'))
-
+    renderScriptRows()
 })
 
 qs('#remove-illustrator-dir').addEventListener('click', e => {
@@ -135,35 +145,49 @@ qs('#remove-illustrator-dir').addEventListener('click', e => {
 })
 
 function createItem(filePath) {
-    const fileName = path.basename(filePath).replace(path.extname(filePath), '')
-
-
-    var e_2 = document.createElement("tr");
-    var e_3 = document.createElement("td");
-    e_3.setAttribute("class", "collapsing");
+    const fileName = path.basename(filePath).split('.')[0]
+    var tr = document.createElement("div");
+    tr.classList.add('five', 'column', 'row')
+    var e_3 = document.createElement("div");
+    e_3.classList.add('column')
+    var dummy = document.createElement("div");
+    dummy.classList.add('column')
     var e_4 = document.createElement("div");
     e_4.setAttribute("class", "ui checkbox");
-    var e_5 = document.createElement("input");
-    e_5.setAttribute("type", "checkbox");
-    e_5.setAttribute("checked", "true");
-    e_4.appendChild(e_5);
+    var checkbox = document.createElement("input");
+    checkbox.setAttribute("type", "checkbox");
+    if (filePath.endsWith('.jsx')) checkbox.setAttribute("checked", "true");
+    checkbox.addEventListener('change', e => {
+        makeActive(filePath, e.target.checked)
+    })
+    e_4.appendChild(checkbox);
     var e_6 = document.createElement("label");
     e_4.appendChild(e_6);
     e_3.appendChild(e_4);
-    e_2.appendChild(e_3);
-    var e_7 = document.createElement("td");
+    tr.appendChild(e_3);
+    var e_7 = document.createElement("div");
+    e_7.classList.add('column')
     e_7.appendChild(document.createTextNode(fileName));
-    e_2.appendChild(e_7);
-    var e_8 = document.createElement("td");
-    e_8.appendChild(document.createTextNode("September 14, 2013"));
-    e_2.appendChild(e_8);
-    var e_9 = document.createElement("td");
-    e_9.appendChild(document.createTextNode("jhlilk22@yahoo.com"));
-    e_2.appendChild(e_9);
-    var e_10 = document.createElement("td");
-    e_10.appendChild(document.createTextNode("No"));
-    e_2.appendChild(e_10);
-    return e_2;
+    tr.appendChild(e_7);
+    var sizeColumn = document.createElement("div");
+    sizeColumn.classList.add('column')
+    tr.appendChild(sizeColumn);
+    var lastModified = document.createElement("div");
+    lastModified.classList.add('column')
+    tr.appendChild(lastModified);
+    var createdAt = document.createElement("div");
+    createdAt.classList.add('column')
+    tr.appendChild(createdAt);
+    fs.lstat(filePath, (err, stat) => {
+        if (err) {
+            console.error(err)
+        } else {
+            sizeColumn.innerText = stat.size
+            lastModified.innerText = stat.mtime.toLocaleString()
+            createdAt.innerText = stat.ctime.toLocaleString()
+        }
+    })
+    return tr;
 }
 
 function renderScriptRows() {
@@ -181,7 +205,7 @@ function renderScriptRows() {
             console.error(err)
             return
         }
-        const scripts = files.filter(x => x.endsWith('.jsx'))
+        const scripts = files.filter(x => x.endsWith('.jsx') || x.endsWith('.jsx.bak'))
 
         for (let i = 0; i < scripts.length; i++) {
             const script = scripts[i];
@@ -230,3 +254,139 @@ Array.from(qa('[data-tab-controls]')).forEach(tabButton => {
         tab.classList.add('active')
     })
 })
+
+qs('#add-script-file-button').addEventListener('click', e => {
+    const file = qs('#add-script-file-input').files[0]
+    if (!file) {
+        alert(__('noFileSelected'))
+        return
+    }
+    const illustratorPresetDir = store.get('illustrator-presets-dir')
+    if (!illustratorPresetDir) {
+        alert(__('cannotFindIllustratorInstallationPleaseSpecifyManually'))
+        return
+    }
+
+    const scriptsDir = path.join(illustratorPresetDir, 'Scripts')
+
+    qs('#add-script-file-input').value = ''
+
+    const filepath = file.path
+    const filename = file.name
+    const targetDir = path.join(scriptsDir, filename)
+
+    if (filename.endsWith('.jsx')) {
+        alert(__('fileNameMustEndWithDotJsx'))
+        return
+    }
+
+    fs.exists(targetDir, exists => {
+        if (exists) {
+            alert(__('scriptAlreadyExists'))
+            return
+        }
+
+        const command = process.platform === "win32"
+            ? `copy "${filepath.replace(/\//g, '\\')}" "${targetDir.replace(/\//g, '\\')}"`
+            : `cp "${filepath}" "${targetDir}"`
+
+        console.log(command)
+
+        sudo.exec(command, options,
+            function (error, stdout = '', stderr = '') {
+                if (error) return alert(error + '\n' + stderr + '\n' + stdout)
+                renderScriptRows()
+                $('#add-script-modal').modal('hide')
+
+                alert(__('successfullyAddedScriptToIllustrator') + '\n' + __('restartIllustratorToUseTheScript'))
+            }
+        );
+
+    })
+})
+
+function makeActive(filepath, active) {
+    const to = path.basename(active ? filepath : filepath + '.bak')
+    const from = active ? filepath + '.bak' : filepath
+
+    fs.exists(from, (exists) => {
+        if (!exists) {
+            alert(__('cannotFindFile', { file: from }))
+        }
+        else {
+            fs.exists(to, exists => {
+                if (exists) {
+                    alert(__('fileAlreadyExists', { file: to }))
+                    return
+                }
+                else {
+                    const command = process.platform === "win32"
+                        ? `rename "${from.replace(/\//g, '\\')}" "${to.replace(/\//g, '\\')}"`
+                        : `mv "${from}" "${to}"`
+
+                    console.log(command)
+                    sudo.exec(command, options,
+                        function (error, stdout = '', stderr = '') {
+                            if (error) return alert(error + '\n' + stderr + '\n' + stdout)
+
+                            if (active) {
+                                alert(__('successfullyAddedScriptToIllustrator') + '\n' + __('restartIllustratorToUseTheScript'))
+                            } else {
+                                alert(__('successfullyDeactivatedScript') + '\n' + __('restartIllustratorToUseTheScript'))
+                            }
+                        }
+                    );
+                }
+            })
+        }
+    })
+}
+
+qs('#add-script-plain-text-button').addEventListener('click', e => {
+    const basename = qs('#add-script-plain-text-filename').value
+    const contents = qs('#add-script-plain-text-textarea').value
+
+    if (!basename.endsWith('.jsx')) {
+        alert(__('filenameShouldEndWithDotJsx'))
+        return
+    }
+
+    const location = store.get('illustrator-presets-dir')
+    if (!location) {
+        alert(__('cannotFindIllustratorInstallationPleaseSpecifyManually'))
+        return
+    }
+
+    const scriptsDir = path.join(location, 'Scripts')
+    const targetFilePath = path.join(scriptsDir, basename)
+
+    fs.exists(targetFilePath, exists => {
+        if (exists) {
+            alert(__('fileAlreadyExists', { file: to }))
+            return
+        } else {
+            const temp = path.join(app.getPath('userData'), basename)
+            fs.writeFile(temp, contents, err => {
+                if (err) {
+                    alert(err)
+                } else {
+                    const command = process.platform === "win32"
+                        ? `move "${temp.replace(/\//g, '\\')}" "${scriptsDir.replace(/\//g, '\\')}"`
+                        : `mv "${temp}" "${targetFilePath}"`
+
+                    console.log(command)
+                    sudo.exec(command, options,
+                        function (error, stdout = '', stderr = '') {
+                            if (error) return alert(error + '\n' + stderr + '\n' + stdout)
+
+                            alert(__('successfullyAddedScriptToIllustrator') + '\n' + __('restartIllustratorToUseTheScript'))
+                        }
+                    );
+                }
+            })
+        }
+    })
+})
+
+
+
