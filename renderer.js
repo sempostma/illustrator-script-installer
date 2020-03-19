@@ -29,7 +29,7 @@ store.set('locale', locale)
 const qs = document.querySelector.bind(document)
 const qa = document.querySelectorAll.bind(document)
 
-const messages = require(`./_locales/${locale}.json`)
+const messages = require(`./locales/${locale}.json`)
 
 function __(id, args) {
     let msg = messages[id]

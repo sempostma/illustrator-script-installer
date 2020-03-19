@@ -1,6 +1,6 @@
 {
   "name": "electron-quick-start",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A minimal Electron application",
   "main": "main.js",
   "scripts": {
@@ -21,10 +21,7 @@
     "icon": "icon.png",
     "productName": "Illustrator Script Installer",
     "buildVersion": "0.0.2",
-    "copyright": "Echo Sierra Studio 2020",
-    "extraFiles": [
-      "_locales/en.json"
-    ]
+    "copyright": "Echo Sierra Studio 2020"
   },
   "repository": "https://github.com/sempostma/illustrator-script-installer",
   "keywords": [
