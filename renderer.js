@@ -5,16 +5,21 @@
 // selectively enable features needed in the rendering
 // process.
 
-
+const minimatch = require('minimatch')
+const unzipper = require('unzipper');
 const Store = require('electron-store');
 const { app, dialog, getCurrentWindow } = require('electron').remote
 const mainWindow = getCurrentWindow()
-const fs = require('fs')
+const fs = require('fs-extra')
 const path = require('path')
 var sudo = require('sudo-prompt');
+const request = require('request')
+const packageJson = require('./package.json')
 var options = {
     name: 'Electron',
 };
+const md5 = require('md5')
+const library = require('./library.json')
 
 const store = new Store();
 
@@ -156,7 +161,7 @@ function createItem(filePath) {
     e_4.setAttribute("class", "ui checkbox");
     var checkbox = document.createElement("input");
     checkbox.setAttribute("type", "checkbox");
-    if (filePath.endsWith('.jsx')) checkbox.setAttribute("checked", "true");
+    if (filePath.endsWith('.jsx') || filePath.endsWith('.js')) checkbox.setAttribute("checked", "true");
     checkbox.addEventListener('change', e => {
         makeActive(filePath, e.target.checked)
     })
@@ -205,7 +210,7 @@ function renderScriptRows() {
             console.error(err)
             return
         }
-        const scripts = files.filter(x => x.endsWith('.jsx') || x.endsWith('.jsx.bak'))
+        const scripts = files.filter(x => x.endsWith('.jsx') || x.endsWith('.jsx.bak') || x.endsWith('.js') || x.endsWith('.js.bak'))
 
         for (let i = 0; i < scripts.length; i++) {
             const script = scripts[i];
@@ -275,7 +280,7 @@ qs('#add-script-file-button').addEventListener('click', e => {
     const filename = file.name
     const targetDir = path.join(scriptsDir, filename)
 
-    if (filename.endsWith('.jsx')) {
+    if (!(filename.endsWith('.jsx') || filename.endsWith('.js'))) {
         alert(__('fileNameMustEndWithDotJsx'))
         return
     }
@@ -346,7 +351,7 @@ qs('#add-script-plain-text-button').addEventListener('click', e => {
     const basename = qs('#add-script-plain-text-filename').value
     const contents = qs('#add-script-plain-text-textarea').value
 
-    if (!basename.endsWith('.jsx')) {
+    if (!(basename.endsWith('.jsx') || basename.endsWith('.js'))) {
         alert(__('filenameShouldEndWithDotJsx'))
         return
     }
@@ -365,7 +370,7 @@ qs('#add-script-plain-text-button').addEventListener('click', e => {
             alert(__('fileAlreadyExists', { file: to }))
             return
         } else {
-            const temp = path.join(app.getPath('userData'), basename)
+            const temp = path.join(app.getPath('userData'), 'temporary-writes', basename)
             fs.writeFile(temp, contents, err => {
                 if (err) {
                     alert(err)
@@ -385,6 +390,168 @@ qs('#add-script-plain-text-button').addEventListener('click', e => {
                 }
             })
         }
+    })
+})
+
+const libraryModules = qs('#library-modules')
+
+const giveMeScriptsDir = zipModule => {
+    return new Promise(async (resolve, reject) => {
+        const url = zipModule.zip
+        const tempName = md5(url)
+        const modulesFolder = path.join(app.getPath('userData'), 'modules')
+        fs.ensureDir(modulesFolder)
+        const tempFolder = path.join(modulesFolder, tempName)
+        if (await fs.exists(tempFolder)) {
+            return resolve(tempFolder)
+        } else {
+            await fs.mkdir(tempFolder)
+            request(url, {  }, (error, response, body) => {
+                if (error) reject(error)
+            })
+                .pipe(unzipper.Parse())
+                .on('entry', entry => {
+                    const basename = path.basename(entry.path)
+                    const filename = entry.path.split('/').slice(1).join('/')
+                    if (entry.type === 'File' && zipModule.files.some(p => minimatch(filename, p))) {
+                        const tempFileName = path.join(tempFolder, basename)
+                        console.log(tempFileName)
+                        entry.pipe(fs.createWriteStream(tempFileName))
+                    } else {
+                        entry.autodrain()
+                    }
+                })
+                .promise()
+                .then(() => resolve(tempFolder), reject)
+        }
+    })
+}
+
+qs('#open-temp-folder').title = app.getPath('userData')
+
+qs('#open-temp-folder').addEventListener('click', () => {
+    open(app.getPath('userData'))
+})
+
+const loadModule = module => {
+    switch (module.type) {
+        case 'zip': {
+            return giveMeScriptsDir(module)
+        }
+        default: {
+            throw new Error('Unknown type ' + module.type)
+        }
+    }
+}
+
+library.modules.forEach(module => {
+    const item = document.createElement('div')
+    item.setAttribute('class', 'item')
+    const header = document.createElement('div')
+    header.setAttribute('class', 'header')
+    header.innerText = module.title
+    item.appendChild(header)
+    if (module.description) item.appendChild(document.createTextNode(module.description))
+    libraryModules.appendChild(item)
+
+    const modulePromise = loadModule(module)
+
+    item.addEventListener('click', async function () {
+        const directory = await modulePromise
+        const moduleContent = qs('#library-module-content')
+
+        const license = document.createElement('a')
+        license.innerText = __('license')
+        license.href = module.license
+        license.target = '_system'
+        moduleContent.appendChild(license)
+        moduleContent.appendChild(document.createTextNode(' - '))
+        const readme = document.createElement('a')
+        readme.innerText = __('readme')
+        readme.href = module.readme
+        readme.target = '_system'
+        moduleContent.appendChild(readme)
+        moduleContent.appendChild(document.createElement('br'))
+        moduleContent.appendChild(document.createElement('br'))
+        const title = document.createElement('h2')
+        title.innerText = module.title
+        moduleContent.appendChild(title)
+        if (module.description) {
+            const description = document.createElement('p')
+            description.innerText = module.description
+            moduleContent.appendChild(description)
+        }
+
+        const files = await fs.readdir(directory)
+
+        const list = document.createElement('div')
+        list.setAttribute('class', 'ui grid')
+
+        var headerRow = document.createElement("div");
+        headerRow.classList.add('three', 'column', 'row')
+        var iconCol = document.createElement('div')
+        iconCol.appendChild(document.createTextNode(__('install')))
+        iconCol.classList.add('column')
+        headerRow.appendChild(iconCol)
+        var nameCol = document.createElement("div");
+        nameCol.classList.add('column')
+        nameCol.appendChild(document.createTextNode(__('name')));
+        headerRow.appendChild(nameCol);
+        var sizeColumn = document.createElement("div");
+        sizeColumn.appendChild(document.createTextNode(__('fileSize')))
+        sizeColumn.classList.add('column')
+        headerRow.appendChild(sizeColumn);
+        headerRow.style.fontWeight = 'bold'
+        list.appendChild(headerRow)
+
+        for (const name of files) {
+            const fileName = path.join(directory, name)
+            const stat = await fs.lstat(fileName)
+            var tr = document.createElement("div");
+            const iconContainer = document.createElement('a')
+            iconContainer.classList.add('column')
+            iconContainer.href = '#'
+            tr.classList.add('three', 'column', 'row')
+            var iconCol = document.createElement('i')
+            iconCol.setAttribute('class', 'column download icon')
+            iconContainer.appendChild(iconCol)
+            tr.appendChild(iconContainer)
+            var nameCol = document.createElement("div");
+            nameCol.classList.add('column')
+            nameCol.appendChild(document.createTextNode(name));
+            tr.appendChild(nameCol);
+            var sizeColumn = document.createElement("div");
+            sizeColumn.appendChild(document.createTextNode(stat.size))
+            sizeColumn.classList.add('column')
+            tr.appendChild(sizeColumn);
+            list.appendChild(tr)
+
+            iconContainer.addEventListener('click', () => {
+                const filepath = fileName
+                const illustratorPresetDir = store.get('illustrator-presets-dir')
+                if (!illustratorPresetDir) {
+                    alert(__('cannotFindIllustratorInstallationPleaseSpecifyManually'))
+                    return
+                }
+                const scriptsDir = path.join(illustratorPresetDir, 'Scripts')
+
+                const targetFilePath = path.join(scriptsDir, name)
+                const command = process.platform === "win32"
+                    ? `copy "${filepath.replace(/\//g, '\\')}" "${targetFilePath.replace(/\//g, '\\')}"`
+                    : `cp "${filepath}" "${targetFilePath}"`
+
+                sudo.exec(command, options,
+                    function (error, stdout = '', stderr = '') {
+                        if (error) return alert(error + '\n' + stderr + '\n' + stdout)
+                        renderScriptRows()
+                        $('#add-script-modal').modal('hide')
+
+                        alert(__('successfullyAddedScriptToIllustrator') + '\n' + __('restartIllustratorToUseTheScript'))
+                    }
+                );
+            })
+        }
+        moduleContent.appendChild(list)
     })
 })
 

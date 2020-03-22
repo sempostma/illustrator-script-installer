@@ -27,3 +27,12 @@ body {
     display: flex;
     flex-direction: column;
 }
+
+#illustrator-dir-not-found-message {
+    margin: 0;
+}
+
+.column {
+    overflow: hidden;
+    word-break: break-all;
+}

@@ -1,0 +1,35 @@
+{
+  "modules": [
+    {
+      "title": "illustrator-scripts",
+      "readme": "https://github.com/shspage/illustrator-scripts/blob/master/readme.md",
+      "license": "https://github.com/shspage/illustrator-scripts/blob/master/LICENSE.txt",
+      "type": "zip",
+      "zip": "https://github.com/shspage/illustrator-scripts/archive/master.zip",
+      "files": [
+        "*.jsx"
+      ]
+    },
+    {
+      "title": "ai2html",
+      "readme": "https://github.com/newsdev/ai2html/blob/master/README.md",
+      "license": "https://github.com/newsdev/ai2html/blob/master/LICENSE.md",
+      "type": "zip",
+      "zip": "https://github.com/newsdev/ai2html/archive/master.zip",
+      "files": [
+        "*.js"
+      ]
+    },
+    {
+      "title": "Adobe-Illustrator by Silly-V",
+      "description": "Some useful Adobe Illustrator scripts",
+      "readme": "https://github.com/Silly-V/Adobe-Illustrator",
+      "license": "https://github.com/Silly-V/Adobe-Illustrator",
+      "type": "zip",
+      "zip": "https://github.com/Silly-V/Adobe-Illustrator/archive/master.zip",
+      "files": [
+        "**/*.jsx"
+      ]
+    }
+  ]
+}

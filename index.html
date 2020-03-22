@@ -6,6 +6,7 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' data:; script-src 'self'">
   <meta http-equiv="X-Content-Security-Policy" content="default-src 'self' 'unsafe-inline' data:; script-src 'self'">
 
+  <link rel="stylesheet" href="./node_modules/typeface-lato/index.css">
   <link rel="stylesheet" href="./node_modules/semantic-ui-css/semantic.css">
   <link rel="stylesheet" href="style.css">
 
@@ -19,7 +20,7 @@
       <div class="purple column">
         <span data-i18="illustratorLocation"></span> <i id="illustrator-location"></i>
         <br>
-        We are using Node.js <span id="node-version"></span>,
+        Node.js <span id="node-version"></span>,
         Chromium <span id="chrome-version"></span>,
         and Electron <span id="electron-version"></span>.
         <br>
@@ -71,11 +72,8 @@
       <div id="add-script" class="ui right floated small pink labeled icon button">
         <i class="file alternate outline icon"></i> <span data-i18="addScript"></span>
       </div>
-      <div class="ui small  button">
-        Approve
-      </div>
-      <div class="ui small  disabled button">
-        Approve All
+      <div id="open-temp-folder" class="ui black deny button">
+        <span data-i18="openTempFolder"></span>
       </div>
     </div>
   </div>
@@ -95,6 +93,8 @@
               data-i18="selectFile"></span></a>
           <a data-tab-controls="select-text-tab" href="#" class="selectable item"><span
               data-i18="insertText"></span></a>
+          <a data-tab-controls="select-library-tab" href="#" class="selectable item"><span
+              data-i18="browseLibrary"></span></a>
         </div>
         <div id="select-file-tab" class="ui bottom attached active tab segment">
           <div class="ui left action input">
@@ -102,7 +102,7 @@
               <i class="file alternate outline icon"></i>
               <span data-i18="addScript"></span>
             </button>
-            <input id="add-script-file-input" type="file" required>
+            <input id="add-script-file-input" accept=".js,.jsx" type="file" required>
           </div>
         </div>
         <div id="select-text-tab" class="ui bottom attached tab segment">
@@ -124,17 +124,34 @@
             </button>
           </div>
         </div>
+        <div id="select-library-tab" class="ui bottom attached tab segment">
+          <div class="ui grid">
+            <div class="four wide column">
+              <div id="library-modules" class="ui middle aligned selection list">
+
+              </div>
+            </div>
+            <div class="twelve wide column">
+              <div id="library-module-content">
+
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <!-- <div class="actions">
-      <div class="ui black deny button">
-        Nope
-      </div>
-      <div class="ui positive right labeled icon button">
+    <div class="actions">
+      <!-- <div id="open-temp-folder" class="ui black deny button">
+        <span data-i18="openTempFolder"></span>
+      </div> -->
+
+
+
+      <!-- <div class="ui positive right labeled icon button">
         Yep, that's me
         <i class="checkmark icon"></i>
-      </div>
-    </div> -->
+      </div> -->
+    </div>
   </div>
 
   <!-- You can also require other files to run in this process -->
