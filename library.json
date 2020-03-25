@@ -35,8 +35,8 @@
     {
       "title": "AI Merge",
       "description": "Import your SVG, AI, EPS, and PDF files into a single Illustrator document.",
-      "readme": "https://github.com/iconfinder/ai-merge/blob/master/README.md"
-      "license": "https://github.com/iconfinder/ai-merge/blob/master/LICENSE"
+      "readme": "https://github.com/iconfinder/ai-merge/blob/master/README.md",
+      "license": "https://github.com/iconfinder/ai-merge/blob/master/LICENSE",
       "type": "zip",
       "zip": "https://github.com/iconfinder/ai-merge/archive/master.zip",
       "files": [
