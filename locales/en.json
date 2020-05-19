@@ -1,7 +1,7 @@
 {
     "weCanTFindThePathToYourLocalIllustratorInstallation": "We can't find the path to your local illustrator installation.",
     "illustratorDirectoryNotFound": "Illustrator directory not found.",
-    "searchIllustratorPath": "Search for Illustrator installation directory.",
+    "searchIllustratorPath": "Search Illustrator directory",
     "cannotFindIllustratorInstallationPleaseSpecifyManually": "Cannot find illustrator installation please specify manually.",
     "foundIllustratorDirectory": "Found illustrator directory.",
     "selectIllustratorLoaction": "Select illustrator loaction",
@@ -28,5 +28,12 @@
     "createdAt": "Created at",
     "name": "Name",
     "chooseMethod": "Choose method",
-    "filenameShouldEndWithDotJsx": "Filename should end with .jsx"
+    "filenameShouldEndWithDotJsx": "Filename should end with .jsx",
+    "browseLibrary": "Browse library",
+    "errorWhileLoadingZipFile": "Error while loading zip file",
+    "openTempFolder": "Open temp folder",
+    "errorWhileCreatingATemporaryDirectory": "Error while creating a temporary directory",
+    "readme": "Readme",
+    "license": "License",
+    "install": "Install"
 }
