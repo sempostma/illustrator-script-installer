@@ -1,6 +1,6 @@
 {
-  "name": "electron-quick-start",
-  "version": "1.0.2",
+  "name": "illustrator-script-installer",
+  "version": "1.0.3",
   "description": "A minimal Electron application",
   "main": "main.js",
   "scripts": {
@@ -12,7 +12,7 @@
     "appId": "com.EchoSierraStudio.IllustratorScriptInstaller",
     "win": {
       "target": "nsis",
-      "publisherName": "April Mintac Pineda"
+      "publisherName": "Echo Sierra Studio"
     },
     "nsis": {
       "createDesktopShortcut": "always"
