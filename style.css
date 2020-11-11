@@ -44,3 +44,7 @@ body {
 .dont-grow {
     flex-grow: 0;
 }
+
+#add-script-modal .content {
+    min-height: 101vh;
+}

@@ -1,6 +1,6 @@
 {
   "name": "illustrator-script-installer",
-  "version": "1.0.3",
+  "version": "1.0.6",
   "description": "A minimal Electron application",
   "main": "main.js",
   "scripts": {
@@ -41,6 +41,7 @@
     "md5": "^2.2.1",
     "minimatch": "^3.0.4",
     "open": "^7.0.3",
+    "pretty-bytes": "^5.4.1",
     "request": "^2.88.2",
     "semantic-ui-css": "^2.4.1",
     "sudo-prompt": "^9.1.1",
