@@ -36,3 +36,11 @@ body {
     overflow: hidden;
     word-break: break-all;
 }
+
+.dont-shrink {
+    flex-shrink: 0;
+} 
+
+.dont-grow {
+    flex-grow: 0;
+}
