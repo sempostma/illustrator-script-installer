@@ -42,6 +42,17 @@
       "files": [
         "*.jsx"
       ]
+    },
+    {
+      "title": "AI ResizeToArtBounds",
+      "description": "Script to resize the artboard of an Adobe Illustrator document (or batch documents) to the size of the artwork",
+      "readme": "https://github.com/mprewitt/AI-ResizeToArtBounds/blob/master/README.md",
+      "license": "https://github.com/mprewitt/AI-ResizeToArtBounds/blob/master/LICENSE.md",
+      "type": "zip",
+      "zip": "https://github.com/mprewitt/AI-ResizeToArtBounds/archive/refs/heads/master.zip",
+      "files": [
+        "*.js"
+      ]
     }
   ]
 }
