@@ -1,12 +1,23 @@
 {
   "modules": [
     {
-      "title": "illustrator-scripts",
+      "title": "Illustrator scripts by 'shspage'",
       "readme": "https://github.com/shspage/illustrator-scripts/blob/master/readme.md",
       "license": "https://github.com/shspage/illustrator-scripts/blob/master/LICENSE.txt",
       "type": "zip",
       "zip": "https://github.com/shspage/illustrator-scripts/archive/master.zip",
       "files": [
+        "*.jsx"
+      ]
+    },
+    {
+      "title": "Illustrator scripts by 'sempostma'",
+      "readme": "https://github.com/sempostma/illustrator-scripts/blob/master/README.md",
+      "license": "https://github.com/sempostma/illustrator-scripts/blob/master/LICENSE",
+      "type": "zip",
+      "zip": "https://github.com/sempostma/illustrator-scripts/archive/master.zip",
+      "files": [
+        "*.js",
         "*.jsx"
       ]
     },
@@ -22,7 +33,7 @@
       ]
     },
     {
-      "title": "Adobe-Illustrator by Silly-V",
+      "title": "Adobe-Illustrator scripts by Silly-V",
       "description": "Some useful Adobe Illustrator scripts",
       "readme": "https://github.com/Silly-V/Adobe-Illustrator",
       "license": "https://github.com/Silly-V/Adobe-Illustrator",
@@ -33,7 +44,7 @@
       ]
     },
     {
-      "title": "AI Merge",
+      "title": "AI Merge script",
       "description": "Import your SVG, AI, EPS, and PDF files into a single Illustrator document.",
       "readme": "https://github.com/iconfinder/ai-merge/blob/master/README.md",
       "license": "https://github.com/iconfinder/ai-merge/blob/master/LICENSE",
@@ -44,7 +55,7 @@
       ]
     },
     {
-      "title": "AI ResizeToArtBounds",
+      "title": "AI resize to art bounds script",
       "description": "Script to resize the artboard of an Adobe Illustrator document (or batch documents) to the size of the artwork",
       "readme": "https://github.com/mprewitt/AI-ResizeToArtBounds/blob/master/README.md",
       "license": "https://github.com/mprewitt/AI-ResizeToArtBounds/blob/master/LICENSE.md",
