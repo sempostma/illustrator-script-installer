@@ -9,4 +9,4 @@ Easily manage the installation of Illustrator Scripts.
 Usage
 -----
 
-Start by selecting or automatically searching for you Adobe Illustrator Directory. After that, you can use the “Add script” button to add new scripts to your installation. You can add scripts from text, files or popular script repositories.
+Start by selecting or automatically searching for your Adobe Illustrator Directory. After that, you can use the “Add script” button to add new scripts to your installation. You can add scripts from text, files or popular script repositories.
